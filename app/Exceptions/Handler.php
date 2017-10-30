@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Define\Retcode;
 use Exception;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -45,6 +46,21 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-        return parent::render($request, $e);
+        if ($e instanceof EvaException) {
+            $code = $e->getCode();
+            if ($code >= 0) {
+                $code = Retcode::ERR_PARAM;
+            }
+            return response(['code' => $code, 'msg' => $e->getMessage()]);
+        }
+
+        if (!env('APP_DEBUG', false)) {
+            return response(['code' => Retcode::ERR_WRONG_SYSTEM_OPERATE, 'msg' => '系统异常，请稍后重试'], 500);
+        }
+        if (env('APP_ENV') == 'local') {
+            return parent::render($request, $e);
+        } else {
+            return response(['code' => Retcode::ERR_WRONG_SYSTEM_OPERATE, 'msg' => '系统异常，请稍后重试'], 500);
+        }
     }
 }
