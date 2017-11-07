@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin\Order;
 
 use App\Define\Retcode;
 use App\Http\Controllers\Controller;
-use App\Logic\Teacher\OrderLogic;
+use App\Logic\OrderLogic;
 use Illuminate\Support\Facades\Auth;
 
 class Delete extends Controller

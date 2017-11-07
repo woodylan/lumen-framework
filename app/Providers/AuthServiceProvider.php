@@ -36,7 +36,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->app['auth']->viaRequest('weappAuth', function ($request) {
             $auth = $request->header('Auth') ?? '';
             if (!empty($auth)) {
-                $redis = Redis::get('journalAuth:' . $auth);
+                $redis = Redis::get('Auth:' . $auth);
                 if (!empty($redis)) {
                     $redisObj = json_decode($redis);
                     //续命
@@ -48,9 +48,15 @@ class AuthServiceProvider extends ServiceProvider
 
         $this->app['auth']->viaRequest('adminAuth', function ($request) {
             $auth = $request->header('Auth') ?? '';
-            //
-
-            return [];
+            if (!empty($auth)) {
+                $redis = Redis::get('Auth:' . $auth);
+                if (!empty($redis)) {
+                    $redisObj = json_decode($redis);
+                    //续命
+                    Redis::setex('Auth:' . $auth, Common::AUTH_EXIST_TIME, $redis);
+                    return UserModel::where('id', $redisObj->userId)->first();
+                }
+            }
         });
     }
 }

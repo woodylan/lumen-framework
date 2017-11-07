@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Teacher\Order;
+namespace App\Http\Controllers\Admin\Order;
 
 
 use App\Define\Retcode;
 use App\Http\Controllers\Controller;
-use App\Logic\Teacher\OrderLogic;
+use App\Logic\OrderLogic;
 use Illuminate\Support\Facades\Auth;
 
 class GetList extends Controller
@@ -17,7 +17,7 @@ class GetList extends Controller
         $perPage = $this->_inputData['perPage'] ?? 50;
 
         $logic = new OrderLogic(Auth::user());
-        $rows = $logic->getList($currentPage, $perPage, $this->only(['orderId', 'perPage', 'currentPage']));
+        $rows = $logic->getList($currentPage, $perPage, $this->only(['perPage', 'currentPage']));
 
         $rows->getCollection()->map(function ($row) {
             $row->setArrayFormat('List');
@@ -29,7 +29,6 @@ class GetList extends Controller
     public static function rules()
     {
         return [
-            'orderId'     => ['required|min:3|max:32', '订单ID'],
             'perPage'     => ['min:1', '每页记录数'],
             'currentPage' => ['min:1', '页码'],
         ];

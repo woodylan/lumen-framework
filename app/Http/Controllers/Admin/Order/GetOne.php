@@ -1,17 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Dylan
- * Date: 2017/9/19
- * Time: 下午2:04
- */
 
 namespace App\Http\Controllers\Teacher\Order;
 
 
 use App\Define\Retcode;
 use App\Http\Controllers\Controller;
-use App\Logic\Teacher\OrderLogic;
+use App\Logic\OrderLogic;
 use Illuminate\Support\Facades\Auth;
 
 class GetOne extends Controller

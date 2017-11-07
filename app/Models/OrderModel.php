@@ -25,7 +25,7 @@ class OrderModel extends BaseModel
         ];
     }
 
-    public function toAdminListArray()
+    public function toListArray()
     {
         return [
             'userId' => $this->id,

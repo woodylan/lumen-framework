@@ -103,9 +103,11 @@ $app->singleton(
 //    App\Http\Middleware\ExampleMiddleware::class
 // ]);
 
-//$app->routeMiddleware([
-//    'auth'        => App\Http\Middleware\Authenticate::class,
-//]);
+$app->routeMiddleware([
+    'auth'      => App\Http\Middleware\Authenticate::class,
+    'adminAuth' => App\Http\Middleware\Auth\AdminAuthenticate::class,
+    'weappAuth' => App\Http\Middleware\Auth\WeappAuthenticate::class,
+]);
 
 /*
 |--------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Logic\Teacher;
+namespace App\Logic;
 
 
 use App\Logic\CRUD;
@@ -27,10 +27,6 @@ class OrderLogic extends CRUD
 
     protected function getListFilter($rows, $condition)
     {
-        $rows->with('answerList', 'studentList');
-
-        $rows->where('order_id', $condition['orderId']);
-
         $rows->orderBy('create_time', 'desc');
     }
 

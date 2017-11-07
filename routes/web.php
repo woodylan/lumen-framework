@@ -26,15 +26,15 @@ $router->group(['prefix' => "/api/admin/v1/",'namespace' => 'Admin'], function (
 });
 
 //web端
-$router->group(['prefix' => "/api/web/v1/", 'namespace' => 'Web'], function () use ($router) {
+$router->group(['prefix' => "/api/admin/v1/", 'namespace' => 'Admin'], function () use ($router) {
     $router->group(['middleware' => ['adminAuth']], function () use ($router) {
         //帐号
         $router->group(['prefix' => "account/", 'namespace' => 'Account'], function () use ($router) {
             $router->post('/check-auth', ['uses' => 'CheckAuth@run']);
         });
 
-        //用户
-        $router->group(['prefix' => "user/", 'namespace' => 'User'], function () use ($router) {
+        //订单
+        $router->group(['prefix' => "order/", 'namespace' => 'Order'], function () use ($router) {
             $router->post('/list', ['uses' => 'GetList@run']);
         });
     });
