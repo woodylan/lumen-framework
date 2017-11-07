@@ -1,9 +1,12 @@
 <?php
 
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/functions.php';
+
+use Symfony\Component\Finder\Finder;
 
 try {
-    (new Dotenv\Dotenv(__DIR__.'/../'))->load();
+    (new Dotenv\Dotenv(__DIR__ . '/../'))->load();
 } catch (Dotenv\Exception\InvalidPathException $e) {
     //
 }
@@ -20,12 +23,49 @@ try {
 */
 
 $app = new Laravel\Lumen\Application(
-    realpath(__DIR__.'/../')
+    realpath(__DIR__ . '/../')
 );
 
-// $app->withFacades();
+$app->withFacades(true, [
+    'Illuminate\Support\Facades\Redis' => 'Redis',
+]);
 
-// $app->withEloquent();
+$app->withEloquent();
+foreach (Finder::create()->files()->name('*.php')->in($app->basePath('config')) as $file) {
+    $filename = trim($file->getFileName(), '.php');
+    $dir = $file->getRelativePath();
+    if (!empty($filename)) {
+        $path = $dir . '/' . $filename;
+        if ($dir) {
+            $path = $dir . '/' . $filename;
+        } else {
+            $path = $filename;
+        }
+        $app->configure($path);
+    }
+}
+
+//测试环境允许指定域名跨域
+if (env('APP_ENV') == 'local' || env('APP_ENV') == 'test') {
+    $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
+    if ($origin) {
+        header('Access-Control-Allow-Origin:' . $origin);
+        header("Access-Control-Allow-Credentials: true");
+        header("Access-Control-Allow-Headers: Auth,Content-Type");
+        header("P3P: CP=CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR");
+    }
+
+} else {
+    $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
+    if (in_array($origin, [
+        'https://xxx.com',
+    ])) {
+        header('Access-Control-Allow-Origin:' . $origin);
+        header("Access-Control-Allow-Credentials: true");
+        header("Access-Control-Allow-Headers: Auth,Content-Type");
+        header("P3P: CP=CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR");
+    }
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -63,9 +103,9 @@ $app->singleton(
 //    App\Http\Middleware\ExampleMiddleware::class
 // ]);
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+//$app->routeMiddleware([
+//    'auth'        => App\Http\Middleware\Authenticate::class,
+//]);
 
 /*
 |--------------------------------------------------------------------------
@@ -79,8 +119,9 @@ $app->singleton(
 */
 
 // $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
-// $app->register(App\Providers\EventServiceProvider::class);
+$app->register(App\Providers\AuthServiceProvider::class);
+$app->register(App\Providers\EventServiceProvider::class);
+$app->register(\Illuminate\Redis\RedisServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -96,7 +137,7 @@ $app->singleton(
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {
-    require __DIR__.'/../routes/web.php';
+    require __DIR__ . '/../routes/web.php';
 });
 
 return $app;
