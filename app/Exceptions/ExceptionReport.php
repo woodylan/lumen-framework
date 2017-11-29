@@ -4,9 +4,9 @@ namespace App\Exceptions;
 
 use Exception;
 
-class EvaException extends Exception
+class ExceptionReport extends Exception
 {
-    protected $isReport = false;
+    protected $isReport = true;
 
     public function isReport()
     {
