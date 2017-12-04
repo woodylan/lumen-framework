@@ -15,11 +15,11 @@ class Login extends Controller
 {
     public function run()
     {
-        $name     = $this->_inputData['name'];
-        $password = $this->_inputData['password'];
+        $name = $this->input('name');
+        $password = $this->input('password');
 
         $logic = new Account();
-        $ret   = $logic->login($name, $password);
+        $ret = $logic->login($name, $password);
 
         return $this->renderRetData(Retcode::SUCCESS, 'success', $ret);
     }

@@ -12,7 +12,7 @@ class Delete extends Controller
 {
     public function run()
     {
-        $id = $this->_inputData['id'];
+        $id = $this->input('id');
 
         $logic = new OrderLogic(Auth::user());
         $logic->delete($id);
@@ -20,7 +20,7 @@ class Delete extends Controller
         return $this->renderRetSimple(Retcode::SUCCESS, 'success');
     }
 
-    public static function rules()
+    public function rules()
     {
         return [
             'id' => ['required|min:3|max:32', 'ID'],

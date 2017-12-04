@@ -11,15 +11,15 @@ class UserInfo extends Controller
 {
     public function run()
     {
-        $userId     = $this->_inputData['userId'];
+        $userId = $this->input('userId');
 
         $logic = new Account();
-        $ret   = $logic->userInfo($userId);
+        $ret = $logic->userInfo($userId);
 
         return $this->renderRetData(Retcode::SUCCESS, 'success', $ret);
     }
 
-    public static function rules()
+    public function rules()
     {
         return [
             'name'     => ['required', '用户名'],

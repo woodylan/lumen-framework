@@ -13,8 +13,8 @@ class GetList extends Controller
 
     public function run()
     {
-        $currentPage = $this->_inputData['currentPage'] ?? 1;
-        $perPage = $this->_inputData['perPage'] ?? 50;
+        $currentPage = $this->input('currentPage', 1);
+        $perPage = $this->input('perPage', 20);
 
         $logic = new OrderLogic(Auth::user());
         $rows = $logic->getList($currentPage, $perPage, $this->only(['perPage', 'currentPage']));
@@ -26,7 +26,7 @@ class GetList extends Controller
         return $this->renderRetData(Retcode::SUCCESS, 'success', paginatorToArray($rows));
     }
 
-    public static function rules()
+    public function rules()
     {
         return [
             'perPage'     => ['min:1', '每页记录数'],

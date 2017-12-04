@@ -54,6 +54,11 @@ class Controller extends BaseController
         return array_only($this->_all, $keys);
     }
 
+    protected function input($key, $default = null)
+    {
+        return array_get($this->_inputData, $key, $default);
+    }
+
     //参数验证
     public function validator()
     {
@@ -74,7 +79,7 @@ class Controller extends BaseController
 
         foreach ($paramRules as $title => $value) {
             //构建验证规则数组 别名数组
-            list($rule['title'],$attributeName[$title])=$value;
+            list($rule['title'], $attributeName[$title]) = $value;
         }
         $data = empty($paramInputRules) ? $this->_inputData : $this->_input;
         $validation = app()->validator->make($data, $rule)->setAttributeNames($attributeName);

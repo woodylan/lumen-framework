@@ -18,7 +18,7 @@ class Save extends Controller
         return $this->renderRetSimple(Retcode::SUCCESS, 'success');
     }
 
-    public static function rules()
+    public function rules()
     {
         return [
             'id' => ['min:3|max:32', 'id'],

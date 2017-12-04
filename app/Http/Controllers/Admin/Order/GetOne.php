@@ -12,7 +12,7 @@ class GetOne extends Controller
 {
     public function run()
     {
-        $id = $this->_inputData['id'];
+        $id = $this->input('id');
 
         $logic = new OrderLogic(Auth::user());
         $row   = $logic->getOne($id);
@@ -21,7 +21,7 @@ class GetOne extends Controller
         return $this->renderRetData(Retcode::SUCCESS, 'success', $row->toArray());
     }
 
-    public static function rules()
+    public function rules()
     {
         return [
             'id' => ['required|min:3|max:32', 'ID'],
