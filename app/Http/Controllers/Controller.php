@@ -57,37 +57,27 @@ class Controller extends BaseController
     //参数验证
     public function validator()
     {
-        //调用子类的rules方法
-        $calledClass = get_called_class();
-        $paramRules = null;
-
         //如果不存在该方法则停止
-        if (method_exists($this, 'rules')) {
-            $paramRules = $calledClass::rules();
-        } else if (method_exists($this, 'inputRules')) {
-            $paramInputRules = $calledClass::inputRules();
-            $paramRules = $paramInputRules;
-        } else {
+        if (!method_exists($this, 'rules')) {
             return;
         }
 
+        $paramRules = $this->rules();
+
         $rule = [];
         $attributeName = [];
+
         //如果没有验证规则则停止
         if (empty($paramRules)) {
-            $paramRules = $paramInputRules;
-            if (empty($paramInputRules)) {
-                return;
-            }
+            return;
         }
+
         foreach ($paramRules as $title => $value) {
-            //构建验证规则数组
-            $rule[$title] = $value[0];
-            //别名数组
-            $attributeName[$title] = $value[1];
+            //构建验证规则数组 别名数组
+            list($rule['title'],$attributeName[$title])=$value;
         }
         $data = empty($paramInputRules) ? $this->_inputData : $this->_input;
-        $validation = \Validator::make($data, $rule)->setAttributeNames($attributeName);
+        $validation = app()->validator->make($data, $rule)->setAttributeNames($attributeName);
         //验证失败抛出异常
         if ($validation->fails()) {
             throw new EvaException($validation->messages()->first(), Retcode::ERR_PARAM);

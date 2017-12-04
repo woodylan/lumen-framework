@@ -24,7 +24,7 @@ class Login extends Controller
         return $this->renderRetData(Retcode::SUCCESS, 'success', $ret);
     }
 
-    public static function rules()
+    public function rules()
     {
         return [
             'name'     => ['required', '用户名'],
